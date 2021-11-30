@@ -22,8 +22,20 @@ SPINE_START_Y= GLOBAL_Y_POSTION
 SPINE_END_X= SPINE_START_X
 SPINE_END_Y= SPINE_START_Y-200
 
-ANGLE_HAND = 1.0
+ANGLE_HAND = 40
 HAND_ANIM_DIR = 1
+IS_ILFTED = True
+
+
+box_x1 = GLOBAL_X_POSTION+130
+box_y1 = GLOBAL_Y_POSTION-250
+box_x2 = box_x1+400
+box_y2 = box_y1
+box_x3 = box_x2
+box_y3 = box_y1+400
+box_x4 = box_x1
+box_y4 = box_y3
+IS_BOX_LEFT = False
 
 
 def init():
@@ -32,6 +44,7 @@ def init():
 
 def update(value):
     global GLOBAL_X_POSTION
+    global GLOBAL_Y_POSTION
     global TARGET_FPS
     global SPINE_START_X
     global SPINE_START_Y
@@ -40,15 +53,51 @@ def update(value):
     global ANGLE_HAND
     global HAND_ANIM_DIR
     global GLOBAL_X_DIR
+    global box_x1
+    global box_y1
+    global box_x2
+    global box_y2
+    global box_x3
+    global box_y3
+    global box_x4
+    global box_y4
+    global IS_BOX_LEFT
     if(GLOBAL_X_POSTION==WINDOW_SIZE):
         GLOBAL_X_DIR = -1
     elif (GLOBAL_X_POSTION == -WINDOW_SIZE):
         GLOBAL_X_DIR = 1
     
     if(GLOBAL_X_DIR == 1):
-        GLOBAL_X_POSTION = GLOBAL_X_POSTION + 10
+        GLOBAL_X_POSTION = GLOBAL_X_POSTION
     elif(GLOBAL_X_DIR == -1):
-        GLOBAL_X_POSTION = GLOBAL_X_POSTION - 10
+        GLOBAL_X_POSTION = GLOBAL_X_POSTION
+
+    if(IS_ILFTED):
+        box_x1 = GLOBAL_X_POSTION-200
+        box_y1 = GLOBAL_Y_POSTION+230
+        box_x2 = box_x1+400
+        box_y2 = box_y1
+        box_x3 = box_x2
+        box_y3 = box_y1+400
+        box_x4 = box_x1
+        box_y4 = box_y3
+        
+    else:
+        if(IS_BOX_LEFT):
+            box_x1 = GLOBAL_X_POSTION-520
+        else:
+            box_x1 = GLOBAL_X_POSTION+130
+        box_y1 = GLOBAL_Y_POSTION-250
+        box_x2 = box_x1+400
+        box_y2 = box_y1
+        box_x3 = box_x2
+        box_y3 = box_y1+400
+        box_x4 = box_x1
+        box_y4 = box_y3
+        
+    
+
+
 
 
 
@@ -57,18 +106,47 @@ def update(value):
     SPINE_START_Y= GLOBAL_Y_POSTION
     SPINE_END_X= SPINE_START_X
     SPINE_END_Y= SPINE_START_Y-200
-    if(ANGLE_HAND==45.0):
-        HAND_ANIM_DIR = -1
-    elif(ANGLE_HAND==-45.0):
-        HAND_ANIM_DIR = 1
-    
-    if(HAND_ANIM_DIR == 1):
-        ANGLE_HAND = ANGLE_HAND + 1.0
-    elif(HAND_ANIM_DIR == -1):
-        ANGLE_HAND = ANGLE_HAND - 1.0
 
     glutPostRedisplay()
     glutTimerFunc(int(1000/TARGET_FPS),update,0)
+
+
+def plotLineDDA(x1,y1,x2,y2):
+    deltaX = x2-x1
+    deltaY = y2-y1
+    steps = 0
+    if(abs(deltaX)>abs(deltaY)):
+        steps = abs(deltaX)
+    else:
+        steps = abs(deltaY)
+    Xincrement = deltaX/steps
+    Yincrement = deltaY/steps
+    glColor3f(1.0,0.0,0.0)
+    glPointSize(5.0)
+    glBegin(GL_POINTS)
+
+    for step in range(1,steps+1):
+        glVertex2f(round(x1),round(y1))
+        x1 = x1 + Xincrement
+        y1 = y1 + Yincrement
+    glEnd()
+    glFlush()
+
+def drawBox():
+    global GLOBAL_X_POSTION
+    global GLOBAL_Y_POSTION
+    global box_x1
+    global box_y1
+    global box_x2
+    global box_y2
+    global box_x3
+    global box_y3
+    global box_x4
+    global box_y4
+    plotLineDDA(box_x1,box_y1,box_x2,box_y2)
+    plotLineDDA(box_x2,box_y2,box_x3,box_y3)
+    plotLineDDA(box_x3,box_y3,box_x4,box_y4)
+    plotLineDDA(box_x4,box_y4,box_x1,box_y1)
 
 
 
@@ -150,22 +228,45 @@ def drawScene():
     drawLegR()
     drawHandL()
     drawHandR()
+    drawBox()
     glutSwapBuffers()
 
 
+
+def getInputArrows(key,b,c):
+    global IS_ILFTED
+    global GLOBAL_X_POSTION
+    global IS_BOX_LEFT
+
+    
+    if(key==GLUT_KEY_UP):
+        IS_ILFTED = True
+        print("ARROW UP IS PRESSED")
+    elif(key==GLUT_KEY_DOWN):
+        IS_ILFTED = False
+        print("ARROW DOWN IS PRESSED")
+    elif(key==GLUT_KEY_LEFT):
+        GLOBAL_X_POSTION = GLOBAL_X_POSTION - 50
+        IS_BOX_LEFT = True
+        print("ARROW LEFT IS PRESSED")
+    elif(key==GLUT_KEY_RIGHT):
+        GLOBAL_X_POSTION = GLOBAL_X_POSTION + 50
+        IS_BOX_LEFT = False
+        print("ARROW RIGHT IS PRESSED")
 
 
 def main():
     print("Man Animation. Starting Window...")
     glutInit(sys.argv)
-    glutInitDisplayMode(GLUT_RGB  | GLUT_DOUBLE)
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE)
     glutInitWindowSize(500,500)
     glutInitWindowPosition(0,0)
-    glutCreateWindow("Man")
+    glutCreateWindow("BOY MOVING ")
+    glutSpecialFunc(getInputArrows)
     glutDisplayFunc(drawScene)
     glutTimerFunc(0,update,0)
     glutIdleFunc(drawScene)
-
+    
     init()
     glutMainLoop()
   
