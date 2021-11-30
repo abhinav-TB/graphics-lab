@@ -75,7 +75,7 @@ def drawCircle(x,y):
     i = 0.0        
     glBegin(GL_TRIANGLE_FAN)    
     glVertex2f(x, y)
-    for i in numpy.arange(0, 360.0, 1.0):
+    for i in range(0,360):
         glVertex2f(BOB_RADIUS*math.cos(math.pi * i / 180.0) + x, BOB_RADIUS*math.sin(math.pi * i / 180.0) + y)
     
     glEnd()
