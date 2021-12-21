@@ -23,11 +23,11 @@ def drawPixel(x, y):
 def midPointCircleDraw(xc, yc, r):
     x = r
     y = 0
-    drawPixel(x+xc, y+yc)
-    if (r > 0):
-        drawPixel(x+xc, -y+yc)
-        drawPixel(y+xc, x+yc)
-        drawPixel(-y+xc, x+yc)
+    # drawPixel(x+xc, y+yc)
+    # if (r > 0):
+    #     drawPixel(x+xc, -y+yc)
+    #     drawPixel(y+xc, x+yc)
+    #     drawPixel(-y+xc, x+yc)
     P = 1 - r
 
     while x > y:

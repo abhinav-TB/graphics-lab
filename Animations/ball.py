@@ -37,7 +37,7 @@ def update(value):
     time = (FRAMES/60.0)
     j=j-(FRAMES/9)
     length = length + RADIUS
-    GLOBAL_X_POSTION = GLOBAL_X_POSTION + RADIUS*SPEED_MULTIPLIER*math.cos(math.radians(ANGLE))
+    GLOBAL_X_POSTION = GLOBAL_X_POSTION + .5
     GLOBAL_Y_POSTION = GLOBAL_Y_POSTION + RADIUS*SPEED_MULTIPLIER*math.sin(math.radians(ANGLE))
     if GLOBAL_X_POSTION>(WINDOW_SIZE+100) or GLOBAL_X_POSTION<-100 :
         GLOBAL_X_POSTION = 0
@@ -73,7 +73,7 @@ def drawScene():
     global RADIUS
     global ANGLE
     drawLine()
-    drawCircle(GLOBAL_X_POSTION+RADIUS*math.sin(math.radians(ANGLE)),GLOBAL_Y_POSTION + RADIUS*math.cos(math.radians(ANGLE)))
+    drawCircle(GLOBAL_X_POSTION,GLOBAL_X_POSTION*math.tan(math.radians(ANGLE))+RADIUS)
     glutSwapBuffers()
 
 

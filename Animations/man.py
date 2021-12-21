@@ -118,7 +118,6 @@ def drawLegR():
     glEnd()
 
 def drawHandL():
-    
     global SPINE_START_X
     global SPINE_START_Y
     glColor3f(1.0,1.0,1.0) 
